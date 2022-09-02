@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}This &amp; that{% endblock %}
+{% block content %}
+<div class="content">
+    <div style="margin: 15px">
+        <div>
+            {{ object.name }}
+        </div>
+        <div>
+            {{ object.year }}
+        </div>
+        <div>
+            <ul>Authors:
+                {% for author in object.author_set.all %}
+                    <li>{{ author }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

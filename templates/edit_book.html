@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}This &amp; that{% endblock %}
+{% block content %}
+<div class="content">
+    <div style="margin: 15px">
+        <form action='{% url 'edit_book' book.id %}' method="post" >
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit">Save changes </button>
+        </form>
+        {% if not form.is_valid %}
+            {{ form.error }}
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
