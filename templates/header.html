@@ -1,0 +1,23 @@
+<div class="header_container">
+    <header class="d-flex justify-content-center py-3">
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a
+                {% if request.resolver_match.url_name == 'book_list' %}
+                    class="nav-link active"
+                {% else %}
+                    class="nav-link"
+                {% endif %}
+                href="{% url 'book_list' %}" aria-current="page">Home</a></li>
+        <li class="nav-item"><a
+                {% if request.resolver_match.url_name == 'create_book' %}
+                    class="nav-link active"
+                {% else %}
+                    class="nav-link"
+                {% endif %}
+                href="{% url 'create_book' %}" class="nav-link">Create new</a></li>
+        <li class="nav-item"><a href="#pricing" class="nav-link">Pricing</a></li>
+        <li class="nav-item"><a href="#faq" class="nav-link">FAQs</a></li>
+        <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+      </ul>
+    </header>
+</div>

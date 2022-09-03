@@ -1,44 +1,58 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% block title %}This &amp; that{% endblock %}
 {% block content %}
 <div class="content">
-    <form action='{% url 'create_book' %}'>
-        <button type="submit">Create New Book</button>
-    </form>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Author</th>
-                <th scope="col">Name</th>
-                <th scope="col">Year</th>
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="container">
+        <form action='{% url 'create_book' %}'>
+            <button class="btn btn-dark" type="submit" >Create New Book</button>
+        </form>
+       <br/>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col">#</div>
+                    <div class="col">Author</div>
+                    <div class="col">Name</div>
+                    <div class="col">Year</div>
+                    <div class="col">Actions</div>
+                </div>
+            </li>
             {% for i in books %}
-            <tr>
-                <td colspan="0" id="book_{{i.id}}_name">{{i.id|default:"-"}}</td>
-                {% for author in i.author_set.all %}
-                    <td colspan="1" id="book_{{i.id}}_author">{{author|default:"-"}}</td>
-                {% endfor%}
-                <td colspan="2" id="book_{{i.id}}_name">{{i.name|default:"-"}}</td>
-                <td colspan="3" id="book_{{i.id}}_year">{{i.year|default:"-"}}</td>
-                <td colspan="4">
-                    <form action='{% url 'details' i.id %}'>
-                        <button type="submit">View Details</button>
-                    </form>
-                    <form action='{% url 'edit_book' i.id %}'>
-                        <button type="submit">Edit record</button>
-                    </form>
-                    <form action='{% url 'delete_book' i.id %}' method="">
-                        <button type="submit">Delete record</button>
-                    </form>
-                </td>
-            </tr>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col" id="book_{{i.id}}_id">{{i.id|default:"-"}}</div>
+                        <div class="col" id="book_{{i.id}}_author">
+                            {% for author in i.author_set.all %}
+                                {{author|default_if_none:'-'}}
+                            {% endfor%}
+                        </div>
+                        <div class="col" id="book_{{i.id}}_name">{{i.name|default:"-"}}</div>
+                        <div class="col" id="book_{{i.id}}_year">{{i.year|default:"-"}}</div>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col">
+                                    <form action='{% url 'details' i.id %}'>
+                                        <button class="btn btn-dark" type="submit">View Details</button>
+                                    </form>
+                                </div>
+                                <div class="col">
+                                    <form action='{% url 'edit_book' i.id %}'>
+                                        <button class="btn btn-dark" type="submit">Edit record</button>
+                                    </form>
+                                </div>
+                                <div class="col">
+                                    <form action='{% url 'delete_book' i.id %}' method="">
+                                        <button class="btn btn-dark" type="submit">Delete record</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
             {% endfor%}
-        </tbody>
-    </table>
+        </ul>
+    </div>
 </div>
 
 {% endblock %}

@@ -5,7 +5,7 @@ from django.views import View
 from .forms import BookForm
 from .models import Book
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
-
+from .tasks import sleep_and_print
 
 class BookListView(View):
 
@@ -16,7 +16,7 @@ class BookListView(View):
 
 class CreateBookView(CreateView):
     model = Book
-    fields = '__all__'
+    form_class = BookForm
     template_name = 'book_form.html'
     success_url = reverse_lazy('book_list')
 
@@ -28,7 +28,7 @@ class DetailsBookView(DetailView):
 
 class EditBookView(UpdateView):
     model = Book
-    fields = '__all__'
+    form_class = BookForm
     template_name = 'edit_book.html'
 
     def get_success_url(self):

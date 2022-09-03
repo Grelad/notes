@@ -1,11 +1,11 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% crispy book_form book_form.helper %}
 {% block title %}This &amp; that{% endblock %}
 {% block content %}
 <div class="content">
     <form action='{% url 'create_book' %}' method="post" >
-            {% csrf_token %}
-            {{ form }}
-            <button type="submit">Create</button>
+            {% crispy form %}
     </form>
 </div>
 {% endblock %}
