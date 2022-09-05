@@ -19,7 +19,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+from hello_world.views import sign_up
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('books/', include('hello_world.urls'))
+    path('books/', include('hello_world.urls')),
+    path('', include('django.contrib.auth.urls')),
+    path('sign-up/', sign_up, name='sign-up'),
 ]
