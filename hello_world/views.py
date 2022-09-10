@@ -1,3 +1,5 @@
+import asyncio
+
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -6,6 +8,9 @@ from .models import Book
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from tg_api.bot import handler
+from asgiref.sync import sync_to_async, async_to_sync
+from django.utils.decorators import classonlymethod
 
 
 class BookListView(View):
@@ -15,13 +20,38 @@ class BookListView(View):
         return render(request, 'book_list.html', self.context)
 
 
-class CreateBookView(LoginRequiredMixin, CreateView):
+class CreateBookView(View):
     model = Book
     form_class = BookForm
     template_name = 'book_form.html'
     success_url = reverse_lazy('book_list')
-    login_url = '/login/'
-    redirect_field_name = 'redirect_to'
+    # login_url = '/login/'
+    # redirect_field_name = 'redirect_to'
+
+    @classonlymethod
+    def as_view(cls, **initkwargs):
+        view = super().as_view(**initkwargs)
+        view._is_coroutine = asyncio.coroutines._is_coroutine
+        return view
+
+    async def get(self, request,  *args, **kwargs):
+        form = BookForm()
+        return render(
+            request,
+            self.template_name,
+            {
+              'form': form,
+              "is_authenticated": await sync_to_async(lambda: request.user.is_authenticated)()
+            }
+        )
+
+    async def post(self, request, *args, **kwargs):
+        form = BookForm(request.POST)
+        if form.is_valid():
+            await sync_to_async(form.save)()
+            await handler(form.cleaned_data)
+            return redirect(self.success_url)
+        return render(request, self.template_name, {'form': form})
 
 
 class DetailsBookView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
